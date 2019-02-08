@@ -1,0 +1,235 @@
+\documentclass[a4paper,12pt,oneside]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{polski}
+\usepackage{amsfonts}
+\usepackage{verbatim}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage[polish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\rhead{}
+\lhead{}
+\cfoot{str. \thepage/\pageref{LastPage}}
+
+\begin{document}
+\makeatletter
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+\newcommand{\linia}{\rule{\linewidth}{0.4mm}}
+
+\renewcommand{\maketitle}{\begin{titlepage}
+
+    \vspace*{1cm}
+
+    \begin{center}\small
+
+    Politechnika Warszawska\\
+
+    Wydział Elektryczny\\
+
+    \end{center}
+
+    \vspace*{1cm}
+
+    \noindent\linia
+
+    \begin{center}
+
+      \LARGE \textsc{\@title}
+
+         \end{center}
+
+      \noindent\linia
+
+    \vspace{1cm}
+
+    \begin{flushright}
+
+    \begin{minipage}{5cm}
+
+    \textit{\small Autorzy:}\\
+
+    \normalsize \textsc{\@author} \par
+
+    \end{minipage}
+         \end{flushright}
+ \begin{center}
+    \vspace{5cm}
+
+     {\small Praca wykonana w~ramach przedmiotu:
+     Języki i~metody programowania 2}
+
+    \vspace*{\stretch{6}}
+
+    \@date
+
+    \end{center}
+
+  \end{titlepage}%
+
+}
+
+\makeatother
+
+\title{Specyfikacja funkcjonalna}
+
+\title{SPECYFIKACJA FUNKCJONALNA\\projekt: automat komórkowy}
+
+\author{Anna Głowińska\newline numer indeksu: 291070\newline anna.glowinska98@gmail.com \newline \newline
+Adam Czajka\newline numer indeksu: 291063 \newline czajka.adam147@gmail.com}
+
+\maketitle
+\tableofcontents
+\thispagestyle{fancy}
+\newpage
+\section{Opis ogólny}
+
+\subsection{Nazwa programu}
+
+\textit{Life} - automat komórkowy symulujący „Grę w~życie” Johna Conwaya zbudowany w~języku~C.
+
+\subsection{Podstawowe pojęcia}
+
+\noindent   \textbf{Komórka} - najmniejsza jednostka automatu komórkowego; może znajdować się w~stanie martwym (przypisujemy jej kolor biały~=~0) lub w stanie żywym (kolor czarny~=~1).
+\\\\
+\textbf{Automat komórkowy} - uporządkowany zbiór komórek, z~których każda znajduje się w~jednym z~kilku dozwolonych stanów (np. martwy i żywy). Komórki przylegają do siebie tworząc siatki.
+\\\\
+\textbf{Siatka} - dwuwymiarowy kawałek płaszczyzny o~konkretnych wymiarach, podzielony liniami tworzącymi macierz, składającą się z~pojedynczych komórek.
+\\\\
+\textbf{Generacja} - Stan wszystkich komórek w~danej chwili, ale też czynność zmiany ich stanów.
+\\\\
+\textbf{Sąsiedztwo} - graniczenie komórki z~innymi komórkami, warunkujące nowy stan tej komórki, wyróżniamy: \newline
+\begin{itemize}
+\item sąsiedztwo Moore'a: 8 przylegających komórek (znajdujących się: na południu, na południowym-zachodzie, na zachodzie, na północnym-zachodzie, na północy, na północnym-wschodzie, na wschodzie i~na południowym-wschodzie),
+\item sąsiedztwo von Neumanna: 4 przylegające komórki (na południu, zachodzie, północy i~wschodzie).
+\end{itemize}
+
+\subsection{Poruszany problem}
+Zadaniem automatu komórkowego \textit{Life} jest symulacja „Gry w~życie” wymyślonej i~opracowanej przez Johna Hortona Conwaya. Gra toczy się na dwuwymiarowej płaszczyźnie podzielonej na kwadratowe komórki. W~zależności od przyjętych zasad każda komórka ma czterech sąsiadów przylegających do niej bokami (sąsiedztwo von Neumanna) lub ośmiu sąsiadów (sąsiedztwo Moore'a), czyli komórki przylegające do niej bokami i~rogami. Każda komórka może znajdować się w~jednym z~dwóch stanów: może być albo żywa (włączona), albo martwa (wyłączona).
+\par Stany komórek zmieniają się przy każdej generacji. Dana generacja jest używana do obliczenia następnej generacji. Po obliczeniu wszystkie komórki zmieniają swój stan dokładnie w~tym samym momencie. Stan komórki po generacji zależy tylko od liczby jej żywych sąsiadów.
+\par Zestaw zasad przy tworzeniu nowej generacji (przejścia do następnego stanu) jest następujący:
+
+
+\begin{enumerate}
+\item Martwa komórka, która ma dokładnie 3~żywych sąsiadów, staje się żywa w~następnym opisie (rodzi się).
+\item Żywa komórka z~2~albo 3~żywymi sąsiadami pozostaje nadal żywa; przy innej liczbie sąsiadów umiera (z~samotności albo zatłoczenia).
+\end{enumerate}
+
+
+
+
+
+\section{Opis funkcjonalności}
+
+
+\subsection{Korzystanie z programu}
+Program \textit{Life} jest kompilowany oraz uruchamiany za pomocą programu \verb+make+, który czyta co ma zrobić z~pliku o~nazwie \verb+Makefile+, znajdującego się w katalogu \verb+life+.
+
+
+\subsection{Uruchomienie programu}
+Program \verb+make+ wywoływany jest bez poleceń z~linii komend. Wszelkie parametry podane przez użytkownika przy wywoływaniu zostaną przez program zignorowane.
+
+\subsection{Możliwości programu}
+
+Zadania jakie wykonuje program:
+\begin{itemize}
+\item  wczytywanie do programu początkowej konfiguracji generacji z~pliku w~formacie TXT,\hspace{6in}
+\item  wczytanie danych wejściowych z wbudowanej w program biblioteki,\hspace{6in}
+\item  przeprowadzenie zadanej liczby generacji,\hspace{6in}
+\item  zapisywanie bieżącej generacji do pliku TXT, który może zostać potem wczytany,\hspace{6in}
+\item  zapisywanie bieżącej generacji do pliku PBM.
+\end{itemize}
+
+
+\section{Format danych i~struktury plików}
+
+
+\subsection{Struktura katalogów}
+
+Szkielet projektu został przedstawiony na poniższym schemacie: \newline
+
+\par life
+\par +--- dane
+\par \ |\ \ \ \   +--- dane.txt
+\par \ |\ \ \ \   +--- biblioteka
+\par \ |\ \ \ \   +--- wyniki
+\par +--- src
+\par \ |\ \ \ \   +--- testy
+\par +--- bin
+\par +--- Makefile
+\newline
+
+gdzie: \par \verb+life+ - katalog główny,
+\par \verb+dane+ - katalog zawierający dane testowe (dane.txt) oraz katalog,
+\par \verb+biblioteka+ - zawierający ciekawe przykłady danych wejściowych,
+\par \verb+wyniki+ - katalog w którym zostają zapisane bieżące generacje w~formacie TXT oraz obrazy przedstawiające stan wybranych generacji w~postaci plików PBM,
+\par \verb+src+ - katalog zawierający pliki z~treścią kodu,
+\par \verb+testy+ - katalog zawierający pliki z kodem poszczególnych testów,
+\par \verb+bin+ - katalog zawierający plik wykonywalny,
+\par \verb+Makefile+ - plik zawierający treść reguły programu \verb+make+.
+
+
+\subsection{Przechowywanie danych}
+\textbf{Na~dysku:}
+Pliki z~danymi tekstowymi oraz obrazy przedstawiające stan wybranych generacji są zapisywane w~katalogu \verb+life/dane/wyniki+. Zostaną nazwane zgodnie z odpowiadającymi im numerami generacji.
+\newline
+\par \textbf{W~programie:}
+Zostanie utworzona struktura przechowująca dane o~wielkości płaszczyzny zadanej przez użytkownika oraz wektor przechowujący kolejne liczby (0 i 1), odpowiadające kolejnym martwym i~żywym komórkom.
+
+
+\subsection{Dane wejściowe}
+
+Program będzie operował na pliku wejściowym o~formacie TXT, gdzie dane przedstawione są w postaci:\newline
+\par \verb+x y+
+\par \verb+1 0 1 1 …+
+\par \verb+0 0 0 1 …+
+\par \verb+0 1 0 0 …+
+\par \verb+… … … +\newline
+\par gdzie:
+\begin{itemize}
+\item \verb+x+, \verb+y+ to odpowiednio podane szerokość oraz długość dwuwymiarowej płaszczyzny na której odbędzie się symulacja „Gry w~życie”,
+\item \verb+0+~–~odpowiada komórce martwej, \verb+1+~-~żywa.
+\end{itemize}
+
+
+\subsection{Dane wyjściowe}
+
+Program dzięki swojej pracy generuje :\begin{enumerate}
+\item Obrazy przedstawiających stan wybranych generacji w~postaci plików PBM.
+\item Bieżącą generację w~pliku TXT.
+\end{enumerate}
+\par Te pliki zostaną zapisane w~katalogu: \verb+life/dane/wyniki+.
+
+\section{Scenariusz działania programu}
+\subsection{Scenariusz ogólny}
+Przebieg działania programu:
+\begin{enumerate}
+\item Kompilacja (o~ile jest konieczna - zgonie z zasadami działania programu \verb+make+) i~uruchomienie.
+\item Pobranie od użytkownika informacji o~rodzaju danych początkowych (własnych albo z biblioteki), sąsiedztwie, którego zamierza użyć dla kolejnych generacji oraz o~liczbie generacji, jaką chce przeprowadzić.
+\item Przebieg generacji.
+\item Pobranie od użytkownika informacji o~zapisie bieżącej generacji w pliku TXT lub w~formie graficznej (plik PBM) oraz jej ewentualny zapis.
+\item Powtórzenie punktów 3. oraz 4. tyle razy, ile zadał użytkownik.
+\item Zakończenie działania programu.
+\end{enumerate}
+\subsection{Scenariusz szczegółowy}
+Szczegółowy przebieg działania programu:
+\begin{enumerate}
+\item Uruchomienie programu przebiega poprzez wywołanie programu \verb+make+ - bez podawania argumentów przez użytkownika. W przypadku ich podania zostają one całkowicie zignorowane.
+\item Program oferuje możliwość wyboru między sąsiedztwem Moore'a oraz von~Neumanna poprzez wpisanie odpowiednio liczby \verb+1+ lub \verb+2+. Następnie pyta o liczbę generacji do wykonania oraz o rodzaj danych wejściowych. W przypadku wybrania danych z biblioteki program wypisze na ekran pełną listę nazw dostępnych przykładowych  danych, które znajdują się w katalogu \verb+life/dane/biblioteka+, z których należy wybrać jeden wpisując odpowiednią liczbę.
+\item Każdorazowo po przebiegu generacji i wyświatleniu jej na ekran program umożliwia użytkownikowi zapis bieżącej generacji do pliku tekstowego lub graficznego. Następuje to poprzez wpisaniu odpowiedniego znaku. Wpisanie \verb+s+ zapisuje plik PBM, \verb+t+ zapisuje plik TXT, \verb+q+ natychmiast kończy działanie programu, a znaki od \verb+1+ do \verb+9+ przechodzą o odpowiednią liczbę generacji.
+\item Po wykonaniu odpowiedniej liczby generacji program samoczynnie kończy działanie.
+\end{enumerate}
+
+\section{Testowanie}
+
+\subsection{Ogólny przebieg testowania}
+
+Do weryfikacji poprawności kodu zastosowane zostaną testy cząstkowe sprawdzające prawidłowość działania odpowiednich funkcji programu \textit{Life}.
+\par Pliki zawierające kod poszczególnych testów będą się znajdować w katalogu \verb+life/src/testy+.
+
+\end{document}
